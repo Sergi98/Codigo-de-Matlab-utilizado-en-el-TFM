@@ -1,28 +1,30 @@
-# Codigo de Matlab utilizado en el TFM
-En este repositorio se muestra el código que se ha utilizado para realizar el programa de Matlab de adquisición de imágenes.
+    clear
 
-clear
+    C=imread('calibracion_X.jpg');  % imagen para la calibracion del lote X.
+    imshow(C)
+    limits=ginput(2); 
+    AA(:,1)=(min(limits(:,1)):max(limits(:,1)));
+    valory=ceil(mean(limits(:,2)));
+    AA(:,2)=valory;
+    hold on
+    plot(AA(:,1),AA(:,2),'r-')
 
-C=imread('calibracion_X.jpg');  % imagen para la calibracion del lote X.
-imshow(C)
-limits=ginput(2); 
-AA(:,1)=(min(limits(:,1)):max(limits(:,1)));
-valory=ceil(mean(limits(:,2)));
-AA(:,2)=valory;
-hold on
-plot(AA(:,1),AA(:,2),'r-')
+    Dist=pdist(limits);
+    factor_prop=4/Dist;
+    Posicion_Feret=1;
 
-Dist=pdist(limits);
-factor_prop=4/Dist;
-Posicion_Feret=1;
-file_path = '.../lotes/LOTE X/';  % ruta de la carpeta de imágenes.
-img_path_list = dir(strcat('.../lotes/LOTE X/','*.jpg'));  % para obtener todas las imágenes en formato jpg de esta carpeta.
-img_num = length (img_path_list);  % para obtener el número total de imágenes.
-if img_num>0  % si se tienen imágenes que cumplen las condiciones.
+    file_path = '.../lotes/LOTE X/';  % ruta de la carpeta de imágenes.
+    img_path_list = dir(strcat('.../lotes/LOTE X/','*.jpg'));  % para obtener todas las imágenes en formato jpg de esta carpeta.
+
+    img_num = length (img_path_list);  %para obtener el número total de imágenes.
+
+    if img_num>0  %si se tienen imágenes que cumplen las condiciones.
+   
     for j = 1: img_num  % lee imágenes una por una
         image_name = img_path_list(j).name;  % nombre de imagen
         image =  imread(strcat(file_path,image_name));
-%         fprintf ('% d% d% s \n', j, strcat (file_path, image_name));  % muestra el nombre de la imagen que se está procesando.
+        fprintf ('% d% d% s \n', j, strcat (file_path, image_name));  % muestra el nombre de la imagen que se está procesando.
+        
         I=image;  % se lee la imagen de las partículas.
         I2=rgb2gray(I);  % se pasa la imagen a escala de grises.
         I3=imbinarize(I2,graythresh(I2));  % se binariza la imagen (pasarla a blanco y negro).
@@ -50,7 +52,8 @@ if img_num>0  % si se tienen imágenes que cumplen las condiciones.
         end
         
     end
-end
+    
+    end
 
-Feret=factor_prop.*Feret.';  % se multiplica por un factor de proporcionalidad para obtener el tamaño real de las partículas.
+    Feret=factor_prop.*Feret.';  % se multiplica por un factor de proporcionalidad para obtener el tamaño real de las partículas.
  
